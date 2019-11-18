@@ -7,24 +7,28 @@ const url = `https://cdn.contentful.com/spaces/${spaceId}/environments/${environ
 const sectionTag = document.querySelector("section.grid");
 
 const fetchItems = async () => {
-  let response = await fetch(url);
-  let data = await response.json();
+  try {
+    let response = await fetch(url);
+    let data = await response.json();
 
-  const assets = data.includes.Asset;
+    const assets = data.includes.Asset;
 
-  let items = data.items.map(item => {
-    let imageUrl = "./assets/image1.jpg";
+    let items = data.items.map(item => {
+      let imageUrl = "./assets/image1.jpg";
 
-    const imageId = item.fields.image.sys.id;
-    const imageData = assets.find(asset => asset.sys.id == imageId);
+      const imageId = item.fields.image.sys.id;
+      const imageData = assets.find(asset => asset.sys.id == imageId);
 
-    if (imageData) {
-      imageUrl = imageData.fields.file.url;
-    }
-    item.fields.image = imageUrl;
-    return item.fields;
-  });
-  return items;
+      if (imageData) {
+        imageUrl = imageData.fields.file.url;
+      }
+      item.fields.image = imageUrl;
+      return item.fields;
+    });
+    return items;
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 fetchItems().then(data => {
